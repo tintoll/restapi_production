@@ -1,13 +1,16 @@
 .DS_Store
-/node_modules/
+node_modules/
 dist/
 npm-debug.log
 yarn-error.log
-.env
 
+/src/node_modules/
 # Editor directories and files
+
 .idea
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.env
+*.gitignore
