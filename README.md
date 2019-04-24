@@ -23,3 +23,87 @@ DEBUG=restapi:server
 
 - 에러핸들링에 대한 많은 개발자들 의견이 들어간 best practice 주소 : https://github.com/i0natan/nodebestpractices#2-error-handling-practices
 
+
+> mysql 을 사용하기 위해서는 mysql2 패키지를 설치해야한다. mysql은 deprecated 되서 공식 지원중인 mysql2 패키지를 사용해야한다. 
+
+```shell
+npm install mysql2
+// ORM을 사용하기 위해서 필요한 패키지
+npm install sequelize
+// cli상에서 sequelize명령어를 사용할수 있게 해주는 패키지
+npm install -g sequelize-cli
+```
+
+#### Sequelize 설정
+sequelize를 환경별로 다른 DB를 사용할 수 있게 유동적으로 설정
+
+```javascript
+// .sequelizerc 파일
+const path = require('path');
+
+module.exports = {
+  'config' : path.resolve('configs', 'sequelize.js'),
+  'models-path' : path.resolve('.', 'models'),
+  'seeders-path' : path.resolve('.', 'seeders'),
+  'migrations-path' : path.resolve('.', 'migrations'),
+}
+```
+
+- path.resolve([from…], to) : 전달받은 경로의 절대 경로를 리턴합니다
+
+```javascript 
+path.resolve('.');
+// '/user/node'
+path.resolve('../Python34', 'libs');
+// '/user/node/Python34/libs'
+```
+
+
+```javascript
+// config/sequelize.js
+require('dotenv').config();
+
+if(process.env.NODE_ENV !== 'production') {
+  // @bebel/register 각각의 모듈을 결합할 때 사용되는 후크(Hook) 모듈입니다
+  require('@bebel/register');
+}
+
+const baseDbSetting = {
+  username : process.env.DB_USER,
+  password: process.env.DB_PW,
+  host: process.env.DB_HOST,
+  timezone : '+09:00',
+  dialect : 'mysql',
+  pool : {
+    max : 100,
+    min : 0,
+    idel : 10000
+  },
+  define : {
+    charset : 'utf8mb4',
+    collate : 'utf8mb4_unicode_ci',
+    timestamps : true
+  }
+}
+
+module.exports = {
+  production : Object.assign({
+    database : process.env.DB_NAME,
+    logging : false,
+  }, baseDbSetting),
+  
+  development : Object.assign({
+    database: process.env.DB_DEV,
+    logging: true,
+  }, baseDbSetting),
+
+  test : Object.assign({
+    database: process.env.DB_TEST,
+    logging: false,
+  }, baseDbSetting),
+}
+```
+
+
+
+
