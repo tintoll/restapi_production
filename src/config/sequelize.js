@@ -2,7 +2,7 @@ require('dotenv').config();
 
 if(process.env.NODE_ENV !== 'production') {
   // @bebel/register 각각의 모듈을 결합할 때 사용되는 후크(Hook) 모듈입니다
-  require('@bebel/register');
+  require('@babel/register');
 }
 
 const baseDbSetting = {

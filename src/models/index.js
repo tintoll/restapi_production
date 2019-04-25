@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 const Sequalize = require('sequelize');
-const config = require(__dirname + '/../configs/sequelize.js')[process.env.NODE_ENV];
+const config = require(__dirname + '/../config/sequelize.js')[process.env.NODE_ENV];
 
 // __filename은 현재 파일은 디렉토리및 파일명까지를 가져옵니다.
 // __dirname은 현재 디렉토리를 가져옵니다.

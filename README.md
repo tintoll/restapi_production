@@ -42,7 +42,7 @@ sequelize를 환경별로 다른 DB를 사용할 수 있게 유동적으로 설�
 const path = require('path');
 
 module.exports = {
-  'config' : path.resolve('configs', 'sequelize.js'),
+  'config' : path.resolve('config', 'sequelize.js'),
   'models-path' : path.resolve('.', 'models'),
   'seeders-path' : path.resolve('.', 'seeders'),
   'migrations-path' : path.resolve('.', 'migrations'),
