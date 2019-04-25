@@ -104,6 +104,74 @@ module.exports = {
 }
 ```
 
+##### connection
+```javascript
+const Sequelize = require('sequelize');
+// Option 1: Passing parameters separately
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: /* one of 'mysql' | 'mariadb' | 'postgres' | 'mssql' */
+});
+// Option 2: Using a connection URI
+const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname');
+```
 
 
+##### 관계 설정(associate)
+```javascript
+// sequelize에서는 모델을 정의하는 파일에서 관계 설정에 대한 정의도 해야 합니다.
+// 아래문장에서 모든 모델들 간의 관계를 통합해준다.
+Object.keys(models).forEach(modelName => {
+  if(models[modelName].associate) {
+    models[modelName].associate(models);
+  }
+});
+```
+- 참고 url : https://victorydntmd.tistory.com/32
 
+
+##### 마이그레이션
+- DB스키마를 실제로 코드 베이스로 구현하기 위해서는 sequelize에는 migration이라고 하는 기능을 이용하여 DB안에 테이블을 생성해 준다.
+
+```shell
+sequelize migration:generate --name create-users
+```
+위에서 생성된 파일에 테이블에 대한 정보를 작성하여줍니다.
+
+```javascript
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('users', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER.UNSIGNED
+      },
+      email: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING
+      },
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      }
+    })
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('users');
+  }
+````
+그 다음에 아래 명령어를 입력합니다.
+```shell
+sequelize db:migrate
+```
