@@ -9,8 +9,8 @@ const baseDbSetting = {
   username : process.env.DB_USER,
   password: process.env.DB_PW,
   host: process.env.DB_HOST,
+  dialect: 'mysql',
   timezone : '+09:00',
-  dialect : 'mysql',
   pool : {
     max : 100,
     min : 0,

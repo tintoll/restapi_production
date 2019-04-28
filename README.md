@@ -171,7 +171,22 @@ sequelize migration:generate --name create-users
     return queryInterface.dropTable('users');
   }
 ````
-그 다음에 아래 명령어를 입력합니다.
+그 다음에 아래 명령어를 입력합니다. 
 ```shell
 sequelize db:migrate
+```
+에러가 발생시( ERROR: Dialect needs to be explicitly supplied as of v4.0.0) - NODE_ENV에 대한 부분이 정의되지 않아서 그렇다.
+```shell
+echo $NODE_ENV
+export NODE_ENV=development
+```
+
+##### Sequelize 시딩
+- 초기 데이터값을 코드로 간편하게 미리 생성할 수 있는 seed 기능
+```shell
+// 파일 생성
+sequelize seed:generate --name seed-users
+
+// 데이터 만들기
+sequelize db:seed:all
 ```
