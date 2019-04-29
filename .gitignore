@@ -6,7 +6,7 @@ yarn-error.log
 
 /src/node_modules/
 # Editor directories and files
-
+/src/coverage/
 .idea
 *.suo
 *.ntvs*
