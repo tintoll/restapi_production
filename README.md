@@ -190,3 +190,36 @@ sequelize seed:generate --name seed-users
 // 데이터 만들기
 sequelize db:seed:all
 ```
+
+
+#### UUID4
+- DB의 PK를 auto increment값으로 사용한다. 문제는 생성된 PK를 그대로 url과 같은 공개된 장소에 노출시킨다는 것이다. 이러면 보안에 취약할 수 박에 없다. 그렇기 때문에 클라이언트가 접근할 수 없는 서버 소스단에는 auto increment PK값으로 데이터에 접근하고 public 한 클라이언트 단에서는 예측 불가능하고 random한 index 체계를 사용하는 것이 좋다. 
+
+##### UUID란
+- UUID(범용 고유 식별자)는 네트워크 상에서 서로 모르는 객체들을 식별하고 구별하기 위해 각각의 고유한 이름을 부여하기 위해 고안된 기술
+- UUID에는 여러가지 종류가 존재하지만 timestamp기반으로 생성하는 UUID4가 가장 많이 사용합니다.
+
+##### UUID 구조
+```javascript
+const uuid4 = require('uuid4');
+uunid4(); // 2851530c-4949-46df-bfc3-3374e7898f7f
+```
+- UUID는 총 32개의 16진수 문자열과 4개의 '-'를 사용해 연결되어 있습니다.
+- UUID값을 순수하게 저장하기 위해선 string형태로 저장해야 하는데 DB에서 string 데이터를 인덱싱 하는 것은 절대로 비추입니다. 인덱스도 비정상적으로 커질뿐 아니라, 실제로 검색 성능도 많이 떨어지기때문이다. 
+
+- UUID계열 값과 인덱싱 가능하고 순서를 보장받는 체계로 변경해야하는 방법 
+  - https://www.percona.com/blog/2014/12/19/store-uuid-optimized-way/
+  - 요약하자면 UUID의 구조르 아래와 같이 변경하면 인덱싱이 가능한, 순서를 '어느정도' 보장받는 수 체계로 변환할수 있다는 내용입니다. 
+  > 1-2-3-4-5  ----> 32145
+  > 2851530c-4949-46df-bfc3-3374e7898f7f --> 46df49492851530cbfc33374e7898f7f
+
+
+
+#### Jest
+- Nodejs에는 수많은 테스팅 프레임워크가 존재한다. Mocha, Chai, Should, Jest 등. 여기서는 테스팅의 종합선물세트라고 불리는 Jest를 사용해 테스팅 환경을 구축해보자 
+
+```shell
+npm install jest
+
+npm install --save-dev babel-jest regenerator-runtime babel-core@^7.0.0-bridge.0
+```
