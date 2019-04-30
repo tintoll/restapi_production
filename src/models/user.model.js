@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         // 이는 곧 mysql 에서 unhex() 하는 것과 같은 결과를 낳습니다.
         defaultValue: () => Buffer(uuid(), "hex"),
         get: function() {
-          return Buffer.from(this.getDataValue("uuid").toString("hex"));
+          return Buffer.from(this.getDataValue("uuid")).toString("hex");
         }
       },
       email: {
