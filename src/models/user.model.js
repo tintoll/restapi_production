@@ -1,5 +1,6 @@
 'use strict'
 import { uuid } from "../utils/uuid";
+import bcrypt from "bcrypt";
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -40,6 +41,23 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   // hooks
+  User.beforeSave(async (user, options) => {
+    if(user.changed('password')) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(user.password, salt);
+    }
+  });
+
+
+  // print
+  User.prototype.toWeb = function () {
+    // id,password 를 외부에 노출하지 않기 위해서 
+    const values = Object.assign({}, this);
+    delete values.id;
+    delete values.password;
+
+    return values;
+  }
 
   return User;
 }

@@ -39,6 +39,4 @@ Object.keys(models).forEach(modelName => {
 models.sequelize = sequelize;
 models.Sequalize = Sequalize;
 
-export {
-  models
-}
+export default models;

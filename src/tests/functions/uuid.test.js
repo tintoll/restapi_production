@@ -1,6 +1,6 @@
 import { uuid } from "../../utils/uuid";
 import randomString from "random-string";
-import { models } from "../../models";
+import models  from "../../models";
 
 test('ordered UUID가 출력되어야 합니다.', () => {
   const orderedUuid = uuid();
