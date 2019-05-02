@@ -51,8 +51,9 @@ module.exports = (sequelize, DataTypes) => {
 
   // print
   User.prototype.toWeb = function () {
-    // id,password 를 외부에 노출하지 않기 위해서 
-    const values = Object.assign({}, this);
+    // id,password 를 외부에 노출하지 않기 위해서
+    // this.get()을 하면 User의 모든정보를 가져오지 않고 실제 컬럼정보만 가져온다.
+    const values = Object.assign({}, this.get());
     delete values.id;
     delete values.password;
 
