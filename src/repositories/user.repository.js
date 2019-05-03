@@ -15,7 +15,11 @@ export default {
   },
 
   findById : async (id) => await models.User.findByPk(id),
-
+  findByEmail : async (email) => await models.User.findOne({
+    where : {
+      email,
+    }
+  }),
   // UPDATE
 
   // DELETE

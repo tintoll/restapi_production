@@ -223,3 +223,28 @@ npm install jest
 
 npm install --save-dev babel-jest regenerator-runtime babel-core@^7.0.0-bridge.0
 ```
+
+### JWT
+- REST API에서 사용자를 인증하는 방법은 무수히 많이 존재하지만 대표적으로 OAuth와 JWT방식을 가장 많이 사용한다. 
+- JWT는 매우 간단한 구조임에도 불구하고 보안성이 상당히 높아서 많이 사용중이다.
+- https://blog.outsider.ne.kr/1160
+
+```shell
+// 설치 
+$ npm i jsonwebtoken
+```
+
+```javascript
+// jwt payload에 담길 내용
+const payload = {
+  message : 'access granted'
+};
+// jwt signing하는 암호화된 key : 노출 금지
+const secret = 'secret';
+// jwt 만료 시간(ms)
+const ttl = 3600000 // 1시간
+
+const token = jwt.sign(payload, secret, {
+  expiresIn : ttl
+});
+```
