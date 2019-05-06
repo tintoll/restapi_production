@@ -8,6 +8,8 @@ import logger from 'morgan';
 import indexRouter from './routes/index';
 import v1Route from "./routes/v1";
 import response from './utils/response';
+import jwtMiddleware from "./middlewares/jwt.middleware";
+
 
 const app = express();
 
@@ -17,6 +19,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', indexRouter);
+
+// 컨트롤러를 타기전에 jwt로부터 user를 조회
+app.use(jwtMiddleware);
 app.use('/v1', v1Route);
 
 // catch 404 and forward to error handler

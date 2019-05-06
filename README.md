@@ -228,6 +228,9 @@ npm install --save-dev babel-jest regenerator-runtime babel-core@^7.0.0-bridge.0
 - REST API에서 사용자를 인증하는 방법은 무수히 많이 존재하지만 대표적으로 OAuth와 JWT방식을 가장 많이 사용한다. 
 - JWT는 매우 간단한 구조임에도 불구하고 보안성이 상당히 높아서 많이 사용중이다.
 - https://blog.outsider.ne.kr/1160
+- 암호화된 토큰이자 곧 정보를 담고 있는 문자열이다. 토큰안에 정보를 온전히 담을 수 있기 때문에 쓸데없이 서버 요청을 손쉽게 해결할 수 있다
+
+
 
 ```shell
 // 설치 
@@ -247,4 +250,53 @@ const ttl = 3600000 // 1시간
 const token = jwt.sign(payload, secret, {
   expiresIn : ttl
 });
+```
+
+#### JWT Middleware
+- 토근이 생성되면 클라이언트에서 요청 header에 Bearer 형식으로 토큰을 븉여서 요청을 날리게 됩니다.
+- 서버에서 사용자 조회 로직
+  - 요청을 처리하는 곳은 컨트롤러
+  - 컨트롤러는 req.headers.authorization이 있다면 token정보를 받아온다
+  - token에서 payload를 뽑아낸 후 db에 사용자 쿼리를 날린다.
+  - 사용자를 받아온다.
+- 위와 같은 방식으로 매번 처리할 수 없으니 관련 된 부분을 middleware로 만들어서 처리해주자  
+
+```javascript
+// jwt.middleware.js
+
+import createError from "http-errors";
+import jwt from "jsonwebtoken";
+import userRepo from "../repositories/user.repository";
+
+export default async (req, res, next) => {
+  try {
+    req.user = null;
+
+    if(req.headers.authorization) {
+      let uuid;
+      jwt.verify(
+        req.headers.authorization.split(' ')[1],
+        process.env.JWT_SECRET,
+        (err, payload) => {
+          if(err){
+            return next(createError(401, '토큰 정보가 유효하지 않습니다.'));
+          }
+
+          uuid = payload.uuid;
+        }
+      )
+
+      const user = await userRepo.find(uuid);
+      if(!user) {
+        return next(createError(404, '사용자를 찾을 수 없습니다.'));
+      }
+      req.user = user;
+    }
+
+    next();
+    
+  }catch(e) {
+    next(e);
+  }
+}
 ```
