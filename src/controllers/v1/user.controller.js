@@ -1,7 +1,8 @@
 import httpStatus from "http-status";
 import createError from "http-errors";
-import userRepo from "../../repositories/user.repository";
+import UserRepo from "../../repositories/user.repository";
 
+const userRepo = new UserRepo();
 const get = async (req, res, next) => {
   try {
 

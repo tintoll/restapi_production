@@ -1,16 +1,21 @@
 import request from "supertest";
 import randomString from "random-string";
 import models from "../../../models";
-import userRepo from "../../../repositories/user.repository";
+import UserRepo from "../../../repositories/user.repository";
 import jwt from "jsonwebtoken";
 
 const app = require('../../../app');
+let userRepo;
 
+beforeAll( () => {
+  userRepo = new UserRepo();
+});
 afterAll( () => models.sequelize.close() );
 
 describe('로그인 테스트 ', () => {
   let userData;
   let token;
+  
 
   beforeAll(async () => {
     userData = {
@@ -38,7 +43,6 @@ describe('로그인 테스트 ', () => {
     expect(userData.email).toBe(user.email);
 
     token = response.body.data.token;
-    console.log(payload);
 
   });
 

@@ -1,20 +1,24 @@
 import request from "supertest";
 import randomString from "random-string";
 import { uuid } from "../../../utils/uuid";
-import models from "../../../models";
+import UserRepo from '../../../repositories/user.repository';
+import models from '../../../models';
 
 const app = require('../../../app');
 
 let user;
+let userRepo;
 
 beforeAll(async () => {
+  userRepo = new UserRepo();
+
   // 사용자 2명 생성
-  await models.User.create({
+  await userRepo.store({
     email : randomString()+'@test.com',
     password : randomString()
   });
 
-  user = await models.User.create({
+  user = userRepo.store({
     email: randomString() + "@test.com",
     password: randomString()
   });
