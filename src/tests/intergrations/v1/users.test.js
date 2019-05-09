@@ -18,7 +18,7 @@ beforeAll(async () => {
     password : randomString()
   });
 
-  user = userRepo.store({
+  user = await userRepo.store({
     email: randomString() + "@test.com",
     password: randomString()
   });

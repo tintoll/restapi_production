@@ -48,7 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       user.password = await bcrypt.hash(user.password, salt);
     }
   });
-
+  
+  /*
   // 생성후 캐시에 저장
   User.afterSave(async (user, options) => {
     const userCache = new UserCache();
@@ -65,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
 
     return values;
   }
+  */
 
   return User;
 }

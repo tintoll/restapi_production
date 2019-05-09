@@ -18,6 +18,7 @@ describe('로그인 테스트 ', () => {
   
 
   beforeAll(async () => {
+
     userData = {
       email : randomString() + '@test.com',
       password : randomString()
@@ -43,6 +44,7 @@ describe('로그인 테스트 ', () => {
     expect(userData.email).toBe(user.email);
 
     token = response.body.data.token;
+    console.log(payload);
 
   });
 
