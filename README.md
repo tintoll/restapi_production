@@ -354,3 +354,34 @@ export default {
 }
 ```
 
+## Log
+- 로그를 잘 적용해 놓아야 배포서버에 에러를 잘 찾을 수 있다. 
+```shell
+npm i morgan widston
+```
+- morgan 은 reqeust와 response를 깔끔하게 formatting해주는 모듈입니다. 
+  ```javascript
+    import morgan from 'morgan'
+    // preset 지정 할수있다. 배포시에는 combined나 common을 추천함.
+    // combined, common, dev, short, tiny
+    app.use(morgan('combined')); 
+  ```
+
+  ```javascript
+  combined 
+  [:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"]
+  common 
+  [:remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]]
+  dev 
+  [:method :url :status :response-time ms - :res[content-length]]
+  short
+  [:remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms]
+  tiny
+  [:method :url :status :res[content-length] - :response-time ms]
+  ```
+
+- formatting된 log를 json형식으로 dump로 파일에 기록해주는 모듈이 winston입니다. 
+
+
+- CLI환경에서 읽기 편한게 해주는 라이브러리 (cat error.log | jq)
+  - https://stedolan.github.io/jq/

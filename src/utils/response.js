@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 
 export default (res, data = {}, code = httpStatus.OK) => {
+  /*
   let result = {
     success : true
   }
@@ -13,7 +14,7 @@ export default (res, data = {}, code = httpStatus.OK) => {
     result = Object.assign({
       data
     }, result);
-  } 
+  } */
 
-  return res.status(code).json(result);
+  return res.status(code).json({data});
 }

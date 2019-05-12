@@ -4,16 +4,18 @@ import createError from 'http-errors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from "body-parser";
-import logger from 'morgan';
+import morgan from 'morgan';
+import moment from "moment";
 import indexRouter from './routes/index';
 import v1Route from "./routes/v1";
 import response from './utils/response';
 import jwtMiddleware from "./middlewares/jwt.middleware";
+import { logger, stream } from "./config/windston";
 
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(morgan('combined', {stream}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -36,9 +38,30 @@ app.use((err, req, res, next) => {
     apiError = createError(err);
   }
 
-  // set locals, only providing error in development
-  res.locals.message = apiError.message;
-  res.locals.error = process.env.NODE_ENV === 'development' ? apiError : {};
+  if(process.env.NODE_ENV === 'test') {
+    const errObj = {
+      req :  {
+        headers : req.headers,
+        query : req.query,
+        body : req.body,
+        route : req.route
+      },
+      error : {
+        message : apiError.message,
+        stack : apiError.stack,
+        status : apiError.status
+      },
+      user : req.user
+    }
+
+    logger.error(`${moment().format('YYYY-MM-DD HH:mm:ss')}`, errObj);
+  } else {
+    // set locals, only providing error in development
+    res.locals.message = apiError.message;
+    res.locals.error =  apiError;
+  }
+
+  
   // render the error page
   return response(res, {
     message: apiError.message

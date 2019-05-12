@@ -1,7 +1,6 @@
 'use strict'
 import { uuid } from "../utils/uuid";
 import bcrypt from "bcrypt";
-import UserCache from '../cache/user.cache';
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
@@ -48,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       user.password = await bcrypt.hash(user.password, salt);
     }
   });
-  
+
   /*
   // 생성후 캐시에 저장
   User.afterSave(async (user, options) => {

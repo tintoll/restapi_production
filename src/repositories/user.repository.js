@@ -32,7 +32,6 @@ class UserRepository {
         }
       }) // sequelize 객체 반환
 
-      return UserWrapper.create(user);
     }
     return UserWrapper.create(user);
   }
