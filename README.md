@@ -385,3 +385,67 @@ npm i morgan widston
 
 - CLI환경에서 읽기 편한게 해주는 라이브러리 (cat error.log | jq)
   - https://stedolan.github.io/jq/
+
+
+#### Error Log Tracking Solution
+
+##### Sentry
+- python으로 작성된 로그 취합, 분석 및 트래킹 시스템
+- https://sentry.io/welcome/
+- 무료버전은 10,000개의 이벤트를 제공하고 일주일 분량을 백업본을 제공해준다.
+
+```javascript
+// 설치 
+$ npm i @sentry/node
+
+// .env
+SENTRY_DSN= 여러분의 DSN 을 추가해주세요 
+
+
+// app.js 
+// 운영환경에서만 전송하도록 설정
+if (process.env.NODE_ENV === 'production') {
+  // 에러 핸들링 전 Sentry 로 캡쳐
+  const sentry = require('@sentry/node')
+  sentry.init({ dsn: process.env.SENTRY_DSN })
+  app.use(sentry.Handlers.errorHandler())
+}
+
+```
+
+##### Slack Webhook
+- node에서 Slack웹훅을 사용하기 위해서는 아래 패키지를 사용하면 편하게 연동할수 있다.
+
+```javascript
+// 설치 
+$ npm i @slack/client
+
+// .env
+SLACK_WEBHOOK=https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXX...
+
+
+// 사용방법
+const { IncomingWebhook } = require('@slack/client')
+const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK)
+webhook.send({
+  'attachments': [
+    {
+      'color': '#ff0000',
+      'text': '에러 발생!!! 출근하라!!!',
+      'fields': [
+        {
+          'title': err.message,
+          'value': err.stack,
+          'short': false
+        }
+      ],
+      'ts': moment().unix()
+    }
+  ]
+}, (err, res) => {
+  // 심지어 여기서도 에러가...?
+  if (err) {
+    sentry.captureException(err)
+  }
+})
+```
